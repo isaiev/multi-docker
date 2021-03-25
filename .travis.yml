@@ -10,3 +10,15 @@ before_install:
 script:
   - docker run -e CI=true tabatab/react-test npm test
 
+after_success:
+  - docker build -t tabatab/multi-client ./client
+  - docker build -t tabatab/multi-nginx ./nginx
+  - docker build -t tabatab/multi-server ./server
+  - docker build -t tabatab/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push tabatab/multi-client
+  - docker push tabatab/multi-nginx
+  - docker push tabatab/multi-server
+  - docker push tabatab/multi-worker
