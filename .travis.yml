@@ -1,0 +1,12 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t tabatab/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true tabatab/react-test npm test
+
